@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PEOPLE DATA</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <h1>PEOPLE DATA</h1>
+        <button id="nextBtn">Next Person</button>
+        <div id="dataContainer">
+           
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let jsonData; // Variable to store the JSON data
+        let currentIndex = 0;
+
+        // Function to fetch the JSON data and load the first person on page load
+        function loadFirstPerson() {
+            $.getJSON('index.php', function(data) {
+                jsonData = data;
+                displayPerson(currentIndex);
+            });
+        }
+
+        // Function to display the person's information
+        function displayPerson(index) {
+            const person = jsonData[index];
+            if (person) {
+                const personDetails = `
+                <div class="person-details">
+            <span class="person-index">${index + 1}</span>
+            <div class="person-info">
+                <span>Name:<span class="person-name">${person.name}</span></span>
+                <span>Location:<span class="person-location"> ${person.location}</span></span>
+            </div>
+        </div>
+                `;
+                $('#dataContainer').append(personDetails); // Use append instead of html
+            }
+        }
+
+        // Function to handle the "Next Person" button click
+        function onNextPersonClick() {
+            currentIndex++;
+            if (currentIndex < jsonData.length) {
+                displayPerson(currentIndex);
+            } else {
+                alert('No more people!');
+                currentIndex = jsonData.length - 1;
+            }
+        }
+
+        // Add event listener to the "Next Person" button
+        $('#nextBtn').on('click', onNextPersonClick);
+
+        // Load the first person on page load
+        loadFirstPerson();
+    </script>
+</body>
+</html>
